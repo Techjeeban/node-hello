@@ -26,4 +26,15 @@ jobs:
       - name: Log in to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        run: |
+         IMAGE_TAG=904233102889.dkr.ecr.ap-south-1.amazonaws.com/nodesample:latest
+         docker build -t $IMAGE_TAG .
+         docker push $IMAGE_TAG
+        env:
+         AWS_REGION: ap-south-1
+         AWS_ACCOUNT_ID: 904233102889
+         IMAGE_REPO_NAME: nodesample
         

@@ -49,7 +49,4 @@ jobs:
           ssh -o StrictHostKeyChecking=no ec2-user@13.235.115.11 'echo "logged in successfully!" && exit'
             aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 904233102889.dkr.ecr.ap-south-1.amazonaws.com
             docker pull 904233102889.dkr.ecr.ap-south-1.amazonaws.com/nodesample:latest
-            docker stop nodecontainer || true
-            docker rm nodecontainer || true
-            docker run -d -p 3000:3000 --name nodecontainer 904233102889.dkr.ecr.ap-south-1.amazonaws.com/nodesample:latest
-        
+  

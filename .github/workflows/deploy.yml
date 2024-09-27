@@ -30,13 +30,13 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         run: |
-         IMAGE_TAG=904233102889.dkr.ecr.ap-south-1.amazonaws.com/nodesample:latest
+         IMAGE_TAG=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/nodesample:latest
          docker build -t $IMAGE_TAG .
          docker push $IMAGE_TAG
         env:
-         AWS_REGION: ap-south-1
-         AWS_ACCOUNT_ID: 904233102889
-         IMAGE_REPO_NAME: nodesample
+         AWS_REGION: ${{ secrets.AWS_REGION }}
+         AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+         IMAGE_REPO_NAME: ${{ secrets.IMAGE_REPO_NAME }}
 
       - name: Add SSH key
         uses:
@@ -47,11 +47,11 @@ jobs:
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOYMENT_SERVER_USER }}@${{ secrets.DEPLOYMENT_SERVER_IP }} << 'EOF'
-          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 904233102889.dkr.ecr.ap-south-1.amazonaws.com
-          docker pull 904233102889.dkr.ecr.ap-south-1.amazonaws.com/nodesample:latest
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com
+          docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/nodesample:latest
           docker stop nodecontainer || true
           docker rm nodecontainer || true
-          docker run -d -p 3000:3000 --name nodecontainer 904233102889.dkr.ecr.ap-south-1.amazonaws.com/nodesample:latest
+          docker run -d -p 3000:3000 --name nodecontainer ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nodesample:latest
           EOF
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}

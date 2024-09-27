@@ -40,7 +40,7 @@ jobs:
 
       - name: Add SSH key
         uses:
-          webfactory/ss-agent@v0.5.3
+          webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{secrets.SSH_PRIVATE_KEY}}
 

@@ -48,18 +48,11 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.DEPLOYMENT_SERVER_USER }}@${{ secrets.DEPLOYMENT_SERVER_IP }} << 'EOF'
           aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 904233102889.dkr.ecr.ap-south-1.amazonaws.com
-          docker pull your-account-id.dkr.ecr.ap-south-1.amazonaws.com/your-repo-name:latest
-          docker stop your-container-name || true
-          docker rm your-container-name || true
-          docker run -d -p 80:80 --name your-container-name your-account-id.dkr.ecr.ap-south-1.amazonaws.com/your-repo-name:latest
+          docker pull 904233102889.dkr.ecr.ap-south-1.amazonaws.com/nodesample:latest
+          docker stop nodecontainer || true
+          docker rm nodecontainer || true
+          docker run -d -p 80:80 --name nodecontainer 904233102889.dkr.ecr.ap-south-1.amazonaws.com/nodesample:latest
           EOF
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Deploy to server
-        run: |
-          ssh -o StrictHostKeyChecking=no ec2-user@13.235.115.11 'echo "logged in successfully!" && exit' 
-            touch file1
-            
-            docker pull 904233102889.dkr.ecr.ap-south-1.amazonaws.com/nodesample:latest
   

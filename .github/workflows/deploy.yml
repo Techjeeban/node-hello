@@ -46,7 +46,8 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no ec2-user@13.235.115.11 'echo "logged in successfully!" && exit'
+          ssh -o StrictHostKeyChecking=no ec2-user@13.235.115.11 'echo "logged in successfully!" && exit' 
+            touch file1
             aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 904233102889.dkr.ecr.ap-south-1.amazonaws.com
             docker pull 904233102889.dkr.ecr.ap-south-1.amazonaws.com/nodesample:latest
   
